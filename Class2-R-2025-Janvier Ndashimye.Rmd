@@ -1,0 +1,594 @@
+---
+title: "Data management"
+author: "Janvier Ndashimye"
+date: "`17/10/2025`"
+output: html_document
+---
+#Data Visualization and Data management
+
+##Test to treat data
+```{r}
+data1 <- read.table(text = "
+Sept_2022 Oct_2022 Nov_2022 Dec_2022 Jan_2023 Feb_2023 Mar_2023 Apr_2023 May_2023 June_2023
+1 4 6 30 140 67 47 23 39 134 80
+2 10 2 29 164 72 81 28 63 211 132
+", header = TRUE)
+
+
+# Open a fresh plot window (important if RStudio messed up the last one)
+          
+dev.new()        # opens a new window
+
+# Draw bar plot
+barplot(as.matrix(data1),
+        main = "Confirmed Cases Vs Gender",
+        beside = TRUE,
+        col = c("gold3", "red"))
+
+# Add legend
+legend("topright",
+       c("Male", "Female"),
+       cex = 0.8,
+       bty = "n",
+       fill = c("gold3", "red"))
+
+
+```
+```{r}
+data3 <- read.table(text = "
+sept_2022 Oct_2022 Nov_2022 Dec_2022 Jan_2023 Feb_2023 Mar_2023 Apr_2023 May_2023 June_2023
+1 867 582 1802 12003 3059 9205 5346 7269 5933 3245
+2 842 436 1805 11785 3508 10908 4902 7883 5901 4646
+", header = TRUE)
+
+barplot(as.matrix(data3),
+        main = "COVID-19 Tests Vs Gender",
+        beside = TRUE,
+        col = c("blue", "purple"))
+
+legend("topleft",
+       legend = c("Male", "Female"),
+       cex = 1.3,
+       bty = "n",
+       fill = c("blue", "purple"))
+
+
+```
+```{r}
+data2 <- read.table(text = "
+Sept_2022 Oct_2022 Nov_2022 Dec_2022 Jan_2023 Feb_2023 Mar_2023 Apr_2023 May_2023 June_2023
+1 0 0 1 9 8 7 1 4 11 22
+2 11 3 41 242 104 78 44 86 244 147
+3 3 5 17 53 27 43 6 12 90 43
+", header = TRUE)
+
+# Draw barplot
+barplot(as.matrix(data2),
+        main = "Confirmed Cases Vs Age Categories",
+        beside = TRUE,
+        col = c("green", "blue", "purple"))
+
+# Add legend
+legend("topleft",
+       legend = c("Less than 15 years", "15-49 years", "Above 50"),
+       cex = 1.3,
+       bty = "n",
+       fill = c("green", "blue", "purple"))
+
+```
+
+```{r}
+months <- c("Sept_2022", "Oct_2022", "Nov_2022", "Dec_2022", 
+            "Jan_2023", "Feb_2023", "Mar_2023", "Apr_2023", 
+            "May_2023", "June_2023")
+
+Confirmed_covid <- c(14, 8, 59, 304, 139, 128, 51, 102, 345, 212)
+
+plot(Confirmed_covid, 
+     type = "l",
+     pch = 21,
+     col = "red",
+     ylim = c(0, 350),
+     xaxt = "n",
+     ylab = "Number of patients",
+     main = "Confirmed Cases Vs Treatment")
+
+treatment <- c(12, 0, 26, 217, 104, 57, 12, 47, 23, 20)
+
+lines(treatment, col = "blue", lty = 2)
+
+legend("topleft",
+       legend = c("Received treatment", "Confirmed"),
+       cex = 0.8,
+       bty = "n",
+       fill = c("blue", "red"))
+
+axis(1, 
+     at = 1:10, 
+     labels = months,
+     las = 2)  # makes labels vertical for readability
+
+```
+
+```{r}
+months <- c("Sept_2022", "Oct_2022", "Nov_2022", "Dec_2022", 
+            "Jan_2023", "Feb_2023", "Mar_2023", "Apr_2023", 
+            "May_2023", "June_2023")
+
+number_of_test <- c(1709, 1018, 3607, 23788, 6567, 20113, 10248, 15152, 11834, 7891)
+
+plot(number_of_test, 
+     type = "o",              # line with points
+     col = "blue", 
+     ylim = c(0, 24000),
+     xaxt = "n", 
+     ylab = "Number of Tests",
+     main = "COVID-19 Tests")
+
+axis(1, 
+     at = 1:10, 
+     labels = months,
+     las = 2)   # vertical labels for better readability
+
+```
+#ggplot2
+
+ ggplot2 provides a set of tools that allows you to visualize complex data sets in a
+ newcreative way-some work needsomepackagestoget done.-some ofthe graph
+ are created using R’s base graphics system
+ 
+#Library ggplot2
+```{r}
+#install.packages("ggplot2")
+ library(ggplot2)
+```
+#let us explore the data mcars
+```{r}
+data(mtcars)
+
+#dotchart(mtcars$mpg,labels=row.names(mtcars),ce#x = 0.,main="miles per
+ #Gallon of car #model",xlab = "MPG")
+
+ table(mtcars$cyl)
+
+```
+```{r}
+ #barplot(mtcars$cyl)
+barplot(table(mtcars$cyl),
+        main = "Distribution of Car Cylinder Counts",
+        xlab = "Number of Cylinders",
+        ylab = "Number of Cars",
+        col = "lightblue")
+
+```
+```{r}
+barplot(table(mtcars$cyl),
+        main = "Distribution of Car Cylinder Counts",
+        xlab = "Number of Cylinders",
+        ylab = "Number of Cars",
+        horiz = TRUE,
+        col = "lightgreen")
+
+```
+```{r}
+plot(mtcars$mpg ~ mtcars$wt,
+     main = "Automobile Data",
+     xlab = "Weight",
+     ylab = "Miles per Gallon",
+     pch = 19,        # solid points for better visibility
+     col = "blue")
+
+```
+```{r}
+# First plot
+plot(mtcars$mpg ~ mtcars$wt,
+     main = "Automobile Data",
+     xlab = "Weight",
+     ylab = "Miles per Gallon",
+     pch = 19,         # solid points
+     col = "blue")
+
+# Second plot with different point type
+plot(mtcars$mpg ~ mtcars$wt,
+     main = "Automobile Data",
+     xlab = "Weight",
+     ylab = "Miles per Gallon",
+     pch = 17,         # triangle points
+     col = "red")
+
+```
+```{r}
+plot(mtcars$mpg ~ mtcars$wt,
+     main = "Automobile Data",
+     xlab = "Weight",
+     ylab = "Miles per Gallon",
+     pch = 21,       # filled circle with border
+     col = "blue",   # border color
+     bg = "lightblue")  # fill color for points
+
+```
+```{r}
+plot(mtcars$mpg ~ mtcars$wt,
+     type = "l",        # line plot
+     lty = 2,           # dashed line
+     lwd = 2,           # line width
+     col = "red",
+     main = "Automobile Data",
+     xlab = "Weight",
+     ylab = "Miles per Gallon")
+
+```
+ in ggplot2, plots are created by chaining together function using (+)sign. Each function
+ modify the
+ 
+##plot created up to that point
+```{r}
+library(ggplot2)
+ ggplot(data=mtcars, aes(x=wt,y=mpg))+geom_point()+
+ labs(title = "Automobile Data",x="Weight",y="Miles per Galon")
+```
+```{r}
+library(ggplot2)
+
+ggplot(data = mtcars, aes(x = wt, y = mpg)) +
+  geom_point(pch = 17, color = "blue", size = 1) +
+  geom_smooth(method = "lm", color = "green") +
+  labs(title = "Automobile Data",
+       x = "Weight",
+       y = "Miles per Gallon")
+
+```
+
+```{r}
+library(ggplot2)
+
+f0 <- ggplot(data = mtcars, aes(x = wt, y = mpg)) +
+  geom_point(shape = 24, fill = 1, size = 1) +
+  geom_smooth(method = "lm", color = "blue")
+
+f0
+
+```
+```{r}
+f1<-f0+theme_bw()
+ f1
+ ## `geom_smooth()` using formula = 'y ~ x'
+```
+```{r}
+f2<-f1+
+ theme(panel.grid = element_line(linetype = "dotted",color = "Black"))
+ f2
+ ## `geom_smooth()` using formula = 'y ~ x'
+```
+
+#Grouping displays two or more groups of observations in a single plot
+```{r}
+library(ggplot2)
+
+data(mtcars)
+
+# Convert variables to factors with labels
+mtcars$am <- factor(mtcars$am, levels = c(0, 1),
+                    labels = c("Automatic", "Manual"))
+mtcars$vs <- factor(mtcars$vs, levels = c(0, 1),
+                    labels = c("V-Engine", "Straight Engine"))
+mtcars$cyl <- factor(mtcars$cyl)
+
+# Create the ggplot
+ggplot(data = mtcars, aes(x = hp, y = mpg, shape = cyl, color = cyl)) +
+  geom_point(size = 3) +
+  facet_grid(vs ~ am) +
+  labs(title = "Automobile Data by Engine Type",
+       x = "HorsePower",
+       y = "Miles per Gallon")
+
+```
+```{r}
+# Load necessary packages
+library(lattice)
+library(ggplot2)
+
+# Load the dataset
+data(singer, package = "lattice")
+
+# Create boxplot using ggplot2
+ggplot(singer, aes(x = voice.part, y = height)) +
+  geom_boxplot() +
+  labs(title = "Height by Voice Part",
+       x = "Voice Part",
+       y = "Height (inches)") +
+  theme_minimal()
+
+```
+#Usethefollowingfunction:
+
+ geom_bar()geom_boxplot()geom_density()geom_histogram()geom_hline()
+ geom_jitter()geom_line()#geom_point()geom_rug()#geom_smooth()geom_text()
+ geom_violin()geom_vline()##Basicdatamanagement
+ 
+#cbindandrbind
+
+ Whilecombiningcolumnwise,thenumberofrowsmustmatchbutrownamesare
+ ignored.whencombiningrow-wise,boththenumberandthenamesofcolumns
+ mustmatch.
+ 
+```{r}
+data2 <- data.frame(x = 1:3, y = c("a", "b", "c"))
+str(data2)
+
+```
+```{r}
+(cbind(data2,data.frame(z=3:1)))
+```
+```{r}
+ (rbind(data2,data.frame(x=10,y="z")))
+```
+#CreateanotherVariable
+```{r}
+data_class <- read.csv("C:/Users/NDASHIJANVIER/Documents/AUCA/Big Data Analytics/R/course/Assignments/dataset/data_class.csv")
+
+ variable.names(data_class)
+```
+```{r}
+head(data_class,n=5)
+```
+```{r}
+ tail(data_class)
+```
+```{r}
+data_class[,1]
+```
+```{r}
+ summary(data_class$WEIGHT)
+```
+```{r}
+length(data_class$WEIGHT)
+```
+```{r}
+data_class[,-1]
+```
+```{r}
+attach(data_class)
+ (BMI<-WEIGHT/(HEIGHT/100)^2)
+```
+```{r}
+ (BMI<-round(WEIGHT/(HEIGHT/100)^2,digit=1))
+```
+```{r}
+ head(cbind(data_class,BMI))
+```
+```{r}
+tail(cbind(data_class,BMI),n=10)
+```
+```{r}
+ detach(data_class)
+```
+#SummaryofBMI
+```{r}
+ summary(BMI)
+```
+```{r}
+hist(data_class$HEIGHT)
+```
+
+
+```{r}
+hist(data_class$WEIGHT,
+     col = "blue",
+     main = "Sample Histogram",
+     xlab = "Weight",
+     ylab = "Frequency",
+     border = "black")
+
+```
+#Subsetting
+
+##Useof$,[].or[[]]
+
+ CreationofleadershipdataInterest:Howmenandwomendifferinthewaythey
+ leadtheirorganizations.5questionswereaskedinthisstudy.Exampleofthe
+ question:Domenandwomeninmanagementpositiondifferinthedegreetowhich
+ theydefertosuperiors?1:stronglydisagree,2:disagree,3:neitheragreenor
+ disagree,4:agree,5:stronglyagree
+ 
+```{r}
+# Create vectors
+manager <- c(1, 2, 3, 4, 5)
+country <- c("US", "US", "UK", "UK", "UK")
+gender <- c("M", "F", "F", "M", "F")
+age <- c(32, 45, 25, 39, 99)
+q1 <- c(5, 3, 3, 3, 2)
+q2 <- c(4, 5, 5, 3, 2)
+q3 <- c(5, 2, 5, 4, 1)
+q4 <- c(5, 5, 5, NA, 2)
+q5 <- c(5, 5, 2, NA, 1)
+
+# Create data frame
+leadership <- data.frame(manager, country, gender, age, q1, q2, q3, q4, q5,
+                         stringsAsFactors = FALSE)
+
+# Check structure
+str(leadership)
+
+```
+```{r}
+names(leadership)
+```
+ Whatyoucando-combinethescoreofthefivequestions-handlethemissing
+ values-createadatasetofwhatyouwant-createagegrouporagecategories-99
+ indicatethevalueismissing
+ 
+#Missingvalue
+```{r}
+# Replace age 99 with NA
+leadership$age[leadership$age == 99] <- NA
+
+# Create age category column
+leadership$agecat <- NA
+
+leadership$agecat[leadership$age > 75] <- "Elder"
+leadership$agecat[leadership$age >= 35 & leadership$age <= 75] <- "MiddleAged"
+leadership$agecat[leadership$age < 35] <- "Young"
+
+# Check result
+leadership
+
+```
+#Onewaytohandlemissingvalue
+
+ Deletingallobservationswithmissingdata(Listwisedeletion)isoneoftheseveral
+ methodsofhandlingincompletedatasets.Note:Youcanalsoreplacingthemissing
+ valuebytheaverageoftheremainingdata.
+
+```{r}
+is.na(leadership[,5:9])
+```
+```{r}
+newdata<-na.omit(leadership)
+ newdata
+```
+
+# Sortingdata
+```{r}
+ order(leadership$age)
+```
+```{r}
+newdata2<-leadership[order(leadership$age),]
+```
+#Mergingdatasets
+
+ Tomergetwodataframehorizontally,youusemerge()function.Inmostcases,two
+ dataframesarejoinedbyoneormorecommonkeyvariables.-example1:
+ merge(dataframeA,dataframeB,by=“ID”)-example2:
+ merge(dataframeA,dataframeB,by=c(“ID”,“country”))
+ thesecondmergethetwodataframesbyIDandcountry
+ Tojointwodataframe(datasets)vertically,userbind()function:Notethatthetwo
+ datasetmusthavethesamevariables
+ 
+#Subset(selectingvariables,droppingvariables,selectingobservation)
+```{r}
+# Extract columns 5 to 9 by index
+newdata3 <- leadership[, 5:9]
+
+# Extract specific columns by name
+myvars <- c("q1", "q2", "q3", "q4", "q5")
+newdata3 <- leadership[myvars]
+
+# Remove specific columns by index
+newdata4 <- leadership[, -c(1, 2)]   # removes columns 1 and 2
+newdata4 <- leadership[, -(1:5)]     # removes columns 1 to 5
+
+# Remove columns 1 and 7
+newdata5 <- leadership[, -c(1, 7)]
+
+# Access the 4th column directly
+leadership[[4]]       # equivalent to leadership$age
+
+```
+
+```{r}
+ leadership$age
+```
+```{r}
+newdata6<-leadership[c(-1,-3),]
+ newdata6<-leadership[c(2,4,5),]
+ newdata7<-subset(leadership,age>=35|age<24,select=c(q1,q2,q3,q4,q5))
+ attach(leadership)
+```
+```{r}
+#newdata7<-leadership[gender="M"&age>30,]
+ newdata7<-leadership[gender=="M"&age>30,]
+ detach(leadership)
+```
+#Datamanagementwithdyplr
+ Datasourcefromthepackagenycflights13andggplot2Thisdatacontainsall
+ 336,776flightsthatdepartedfromNewYorkcityin2013.
+ 
+#Datamanagementwithdyplr
+ Datasourcefromthepackagenycflights13andggplot2Thisdatacontainsall
+ 336,776flightsthatdepartedfromNewyorkcityin2013.
+
+
+```{r}
+#install.packages("nycflights13")
+ #install.packages("tidyverse")
+ library(nycflights13)
+
+ #install.packages("dplyr")
+ library(dplyr)
+```
+# Thefunctionfilter()
+```{r}
+#rm(list=ls())
+ str(flights)
+```
+```{r}
+#attach(flights)
+ jan<-filter(flights,month==1)
+ jan
+```
+
+```{r}
+ newyear<-filter(flights,month==1,day==1)
+ newyear
+```
+
+```{r}
+dec25<-filter(flights,month==12,day==25)
+ dec25
+```
+```{r}
+ jan_dec<-filter(flights,month==1|month==12)
+ jan_dec
+```
+```{r}
+ nov_dec<-filter(flights,month%in%c(11,12))
+ #detach(flights)
+```
+#Thefunctionarrange()
+ Thischangetheorder
+```{r}
+data_10<-arrange(flights,year,month,day)
+ arrange(flights,desc(arr_delay))
+```
+#Thefunctionselect
+ This helps to selects only the variables you are interested in
+```{r}
+ time_var<-select(flights,year,month,day)
+ select(flights,year:day)
+```
+```{r}
+select(flights,-(year:day))
+```
+# Thefunctionmutate
+ ThisisusefulinaddinganewVariable
+```{r}
+ ##createasmalldataset
+ flights2<-select(flights,year:day,ends_with("delay"),distance,air_time)
+ (mutate(flights2,gain=arr_delay-dep_delay,
+ speed=distance/air_time*60))
+```
+
+ 
+
+ 
+ 
+ 
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 

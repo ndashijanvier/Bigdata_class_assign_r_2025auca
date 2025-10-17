@@ -1,0 +1,399 @@
+---
+title: "Control structures"
+author: "Janvier Ndashimye"
+date: "17/10/2025`"
+output: html_document
+---
+#Grouping
+ Control structures in R allow you to control the flow of execution of a series of R
+ expressions. Basically, control structures allow you to put some “logic” into your R
+ code, rather than just always executing the same R code every time. Control
+ structures allow you to respond to inputs or to features of the data and execute
+ different R expressions accordingly. Commonly used control structures are • if and
+ else: testing a condition and acting on it • for: execute a loop a fixed number of times
+ • while: execute a loop while a condition is true • repeat: execute an infinite loop
+ (must break out of it to stop) • break: break the execution of a loop • next: skip an
+ interaction of a loop
+ if (condition){ ## do something } ## continue with the rest of the code.
+ if( condition){ do something
+ } else { do something else
+ }
+ Youcanalso create a series of test by following the initial if with a number of else ifs
+ if(condition){ do something
+ }else if (condition 2){ Do something different }else{ do something different }
+ 
+# Function on R
+```{r}
+ f<-function(x) x^2
+ formals(f)
+```
+```{r}
+body(f)
+```
+```{r}
+ environment(f)
+```
+#ifelse(test,yes,No)
+```{r}
+# Create p-values
+pvalues <- c(0.867, 0.0054, 0.0018, 0.1572, 0.0183, 0.5386)
+
+# Determine significance
+results <- ifelse(pvalues < 0.05, "Significant", "Not significant")
+results
+# [1] "Not significant" "Significant" "Significant" "Not significant" "Significant" "Not significant"
+
+# Example of conditional assignment
+x <- runif(1, 0, 10)  # random number between 0 and 10
+
+if (x > 3) {
+  y <- 10
+} else {
+  y <- 0
+}
+
+# Print values
+x
+y
+
+```
+Thevalueofyisasetdependingonwhetherx>3ornot.Thiscanalsobeachieved
+ by
+```{r}
+ y<-if(x>3){
+ 10
+ }else{
+ 0
+ }
+```
+####For
+```{r}
+for (i in 1:10) {
+  print(i)
+}
+
+```
+
+
+```{r}
+x <- c("a", "b", "c", "d")
+
+# Access the 3rd element
+x[3]
+# [1] "c"
+
+# Loop over elements safely
+for (i in 1:length(x)) {
+  print(x[i])
+}
+
+```
+```{r}
+for (i in 1:5) {
+  print(1:i)
+}
+
+```
+
+```{r}
+for (i in 5:1) {
+  print(1:i)
+}
+
+```
+#whileLoops
+ Itbeginsbytestingacondition,ifitistrue,thentheyexecutetheloopbody.oncethe
+ loopbodyisexecuted,theconditionistestedagain,untiltheconditionisfalse.after
+ whichtheloopexits.
+```{r}
+count <- 1
+
+while (count < 10) {
+  print(count)
+  count <- count + 1
+}
+
+```
+```{r}
+z <- 5
+set.seed(1)
+
+while (z >= 3 && z <= 10) {
+  coin <- rbinom(1, 1, 0.5)
+  
+  if (coin == 1) {
+    z <- z + 1
+  } else {
+    z <- z - 1
+  }
+}
+
+print(z)
+
+```
+#next,break
+ Thisisusedtoskipaniterationofaloop
+```{r}
+for (i in 1:100) {
+  print(1:i)
+  
+  if (i > 20) {
+    break
+  }
+}
+
+```
+#Function
+ functionname<-function(parameters){statementsreturn(value)}
+ f1<-function(x){result<-x^2+2return(result)}
+ f2<-function(x,y){result<-x2+y2-4return(result)}
+```{r}
+ f<-function(x,y){
+ result<-x+(2*y)+3
+ return(result)
+ }
+f(2,3)
+```
+ Youcanuseargs()functiontoviewtheparameternamesanddefaultvalues
+#Exercises
+ Makefunctionsthatcalculatesummarystatistics
+ Makeafunctiontocalculatetwosamplettest
+#Applyingfunctionstomatricesanddataframe.
+```{r}
+a<-4
+ sqrt(4)
+ 
+```
+```{r}
+b<-c(1,243,5.754,2.987)
+ round(b)
+```
+```{r}
+ c<-matrix(runif(12),nrow=3)
+ c
+```
+```{r}
+log(c)
+
+```
+```{r}
+ mean(c)
+```
+ Noticethatthemeanofmatrixcresultsinascalar(0.444).themean()takethe
+ averageofall12elementsinthematrix.Butwhatifyouwantthethreerowmeans
+ orthefourcolumnmeans?
+ Rprovidesafunction,apply()thatallowstoapplyanarbitraryfunctiontoany
+ dimensionofamatrix,arrayordataframe.Theformatfortheapply()functionis
+apply(x, MARGIN, FUN,…) where x stands for the data object, Margin can be 1(rows)
+ and 2(columns ) ##Col/Row SumsandMeans
+ 
+  • rowSums=apply(x, 1, sum) • rowMeans= apply(x, 1, mean)• colSums =apply(x, 2,
+ sum) •colMeans= apply(x, 2, mean)
+ 
+#lappy function
+ lapply() takes three inputs:,x,a list,a function, and…, It applies to each element of the
+ list and returns a new list. lapply(x,f,…). It is called function because it takes function
+ as anargument. Assume wehaveadataframe df. instead of assigningthe result pf
+ lappliy() to df, we will assign them to df[] to ensure we get a data frame.
+ 
+```{r}
+ fix_missing<-function(x){
+ x[x==-99]<-NA
+ x
+ }
+ function1<-function(x){
+ x^2
+ }
+ curve(function1,-4,4)
+```
+ 
+#df[]<-lappy(df,fix_missing)
+ It works for any numberofcolumns.There is no wayto accidentally miss a column
+Thereisnowaytoaccidentallytreatonecolumndifferentlythananother
+ Iteasytogeneralizethistechniquetoasubsetofcolumns
+#df[1:5]<-lapply(df[1:5],fix_missing)
+ 
+#sapply
+ sapply()andvapply(),variantsoflapply()thatproducesvectors,matrices,and
+ arraysasOutput,insteadoflistsmap(),andmapplywhichiterateovermultiple
+ inputdatastructuresinparallel
+ Anotherimportantfunctionwhendealingwithbigdataissplit()-tapply
+
+#Titanicdata
+```{r}
+ str(Titanic)
+```
+```{r}
+View(Titanic)
+ apply(Titanic,c(1,2),sum)
+```
+```{r}
+ options(digits=2)
+ apply(Titanic,c(1,2),sum)[3:4,]
+```
+```{r}
+apply(Titanic,c(1,4),sum)[3:4,]
+```
+```{r}
+apply(Titanic,c(1,2,4),sum)
+```
+```{r}
+ #apply(Titanic,c(1,2,4),sum)[3:4,]
+ apply(Titanic,c(1,2,4),sum)[3:4,,]
+```
+```{r}
+ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])
+```
+```{r}
+ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[1:2,]
+```
+
+```{r}
+ ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[3:4,]
+```
+```{r}
+ digit=2
+ prop.table(ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[1:2,],margin=2)
+```
+```{r}
+prop.table(ftable(apply(Titanic,c(1,4,2),sum)[3:4,,])[3:4,],margin=2)
+```
+```{r}
+# Compute proportion table for Titanic dataset
+mat <- matrix(
+  prop.table(
+    ftable(
+      apply(Titanic, c(1, 4, 2), sum)[3:4, , ]
+    )[1:2, ],
+    margin = 2
+  ),
+  nrow = 2,
+  dimnames = list(
+    dimnames(Titanic)$Survived,
+    dimnames(Titanic)$Sex
+  )
+)
+
+mat
+
+```
+```{r}
+# Compute column-wise proportion table for Titanic dataset
+mat <- matrix(
+  prop.table(
+    ftable(
+      apply(Titanic, c(1, 4, 2), sum)[3:4, , ]
+    )[3:4, ],
+    margin = 2
+  ),
+  nrow = 2,
+  dimnames = list(
+    dimnames(Titanic)$Survived[3:4],
+    dimnames(Titanic)$Sex
+  )
+)
+
+mat
+
+```
+
+```{r}
+# Create dataset
+Student <- c("Johnncuti", "Angelabakame", "Brucewizeye", "Alexisaganze",
+             "ClaudeRukundo", "JoelKagabo", "Maryineza")
+Math <- c(600, 412, 358, 495, 512, 410, 522)
+Science <- c(95, 99, 80, 82, 75, 89, 77)
+English <- c(25, 22, 18, 20, 29, 30, 27)
+
+# Create data frame
+roster <- data.frame(Student, Math, Science, English, stringsAsFactors = FALSE)
+
+# Check structure
+str(roster)
+
+```
+ standardize variables and obtains the performance scores because they are reported on different scale(With widely differing means and standard deviations,we need to make them comparable before we combine them.)
+ 
+```{r}
+z<-scale(roster[,2:4])
+```
+###performance of each students using row means and adding them to roster using cbind()
+```{r}
+score<-apply(z,1,mean)
+ roster<-cbind(roster,score)
+```
+###Grades thestudents:quantile function gives the percentile rank 
+###of each student's performance score check the cutoff of A
+```{r}
+y<-quantile(score,c(.8,.6,.4,.2))
+```
+```{r}
+ ##createagradevariableus
+ roster$grade[score>=y[1]]<-"A"
+ roster$grade[score<y[1]&score>=y[2]]<-"B"
+ roster$grade[score<y[2]&score>=y[3]]<-"C"
+ roster$grade[score<y[3]&score>=y[4]]<-"D"
+ roster$grade[score<y[4]]<-"F"
+```
+```{r}
+ ####Dealingwithnames
+ name<-strsplit((roster$Student),"")
+ lastname<-sapply(name,"[",2)
+ firstname<-sapply(name,"[",1)
+ roster<-cbind(firstname,lastname,roster[,-1])
+ roster<-roster[order(lastname,firstname),]
+ roster
+```
+
+#Aggregationandreshaping
+
+##transpose
+```{r}
+cars<-mtcars[1:5,1:4]
+ cars
+```
+```{r}
+ t(cars)
+```
+#aggregate data
+ aggregate() collapse data in R using one or more by variables and a defined function
+```{r}
+# Set digits to display
+options(digits = 3)
+
+# Aggregate numeric columns by cyl and gear
+aggdata <- aggregate(
+  mtcars[, sapply(mtcars, is.numeric)],
+  by = list(Cyl = mtcars$cyl, Gear = mtcars$gear),
+  FUN = mean,
+  na.rm = TRUE
+)
+
+aggdata
+
+```
+#Reshape
+ Step 1: install the package reshape2 step 2: melt data step 3: Cast the melted data
+ into any shape you desire
+ During the cast, you can aggregate the data with any function you wish.
+ 
+```{r}
+ id<-c(1,1,2,2)
+ time<-c(1,2,1,2)
+ x1<-c(5,3,6,2)
+ x2<-c(6,5,1,4)
+ mydata<-data.frame(id,time,x1,x2)
+ mydata
+```
+
+ 
+ 
+
+
+
+ 
+ 
+
+
+
+

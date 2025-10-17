@@ -1,0 +1,381 @@
+---
+title: "Regression line"
+author: "Janvier Ndashimye"
+date: "`r Sys.Date()`"
+output: html_document
+---
+# Fitting regression models with lm()
+## Simple linear regression
+```{r}
+data("women")
+ fit<-lm(weight~height, data=women)
+ summary(fit)
+```
+```{r}
+women$weight
+```
+```{r}
+fitted(fit)
+```
+
+```{r}
+residuals(fit)
+```
+
+
+```{r}
+plot(women$height,women$weight,xlab="Height(ininches)",ylab="Weight
+ (inpounds)")
+ abline(fit)
+```
+The plot suggests that you might be able to improve on the prediction by using a line
+ with one bend. WEcanfit thepolynomial regression. #### Polynomial regression
+```{r}
+fit2<- lm(weight~height+I(height^2), data=women)
+ summary(fit2)
+```
+```{r}
+plot(women$height,women$weight,xlab="Height (in inches)",ylab="Weight
+ (in pounds)")
+ lines(women$height,fitted(fit2))
+```
+#Multiple linear regression
+ 
+ When we have more than one predictor variable, simple linear regression becomes
+ multiple linear regression, and the analysis grows more involved.
+ 
+#HW:Find a dataset of whichyou canfit multiple linear regression and interpret
+ your results
+#Regression diagnostics
+ In this section you want to know if the model you have applied is appropriate. The
+ most commonapproachistoapplythe plot() function to the object returned by the
+ lm(). This produces four graphs that are useful for evaluating the model fit.
+ 
+```{r}
+fit<- lm(weight~height,data=women)
+ par(mfrow=c(2,2))
+ plot(fit)
+```
+Normality: the residual plot should be normally distributed with mean 0. The
+ normal QQplot(upper right) is probability plot of the standardized residuals
+ against the value that would be expected under normality. If you have met the the
+ normality assumption, the points on this graph should fall on the straight 45 degree
+ line. Because they don’t, you have clearly violated the normality assumption
+ 
+ Independence: Judge based on how data were collected
+ Linearity: If the dependent variable is linear related to the independent variables.
+ there should be no systematic relationship between the residuals and the predicted
+ (That is fitted) values. In the residuals vs. fitted graph (upper left), you see clear
+ evidence of a curved relationship, which suggests that you may want to add a
+ quadratic term to the regression.
+ The other graph helps to identify outliers, high laverage points, influential
+ observations
+ 
+ Homoscedasticity: If you have met the constant variance assumption, the point in
+ the scale-location graph(bottom left) should be a random band around a horizontal
+ line. you seem to meet this assumption.
+ 
+```{r}
+ fit2<- lm(weight~height+I(height^2), data=women)
+ par(mfrow=c(2,2))
+ plot(fit2)
+```
+```{r}
+newfit<-lm(weight~height+I(height^2),data=women[-c(13,15),])
+ par(mfrow=c(2,2))
+ plot(newfit)
+```
+#Outliers
+ The car package also provides a statistical test outliers. the function is
+ “outlierTest()”
+ 
+#Corrective measures
+ Whatdoyoudoifyouidentify problems? They are four approachesto dealing with
+#violations of regression assumptions:
+###Deleting observations ( influentials observation like outliers)
+###Transforming variables ( transform response like y^(r))
+###Adding or deleting variables ( sometimes to deal with multicolinearity)
+###Using another regression approach (Like robust regression, etc…)
+
+#Selecting the best regression model
+
+ Shoud you include all variables under study? should you add polynomial or
+ interactions terms to improve the fit? you make a decision based on predictive
+ accuracy and simple and replicable model.
+ HW:Readaboutvariable selection methods
+ 
+#Exploration of mtcars data
+```{r}
+ plot(mpg~wt,data=mtcars)
+ model<- lm(mpg~wt, data=mtcars)
+ #plot(model)
+ abline(model)
+```
+```{r}
+summary(model)
+```
+```{r}
+predict(model,newdata=data.frame(wt=6))
+```
+#Simulation in R
+ Simulation is an important (and big) topic for both statistics and for a variety of
+ other areas where there is a need to introduce randomness. Sometimes you want to
+ implement a statistical procedure that requires random number generation or
+ sample (i.e. Markov chain Monte Carlo, the bootstrap, random forests, bagging) and
+ sometimes you want tosimulate a system andrandom numbergenerators can be
+ used to model randominputs
+ 
+#Generation of random numbers
+ Wecansimulate from probability distribution
+ dnorm(x, mean= 0, sd=1,log = FALSE)
+ pnorm(q, mean =0, sd =1,lower.tail = TRUE, log.p = FALSE)
+ qnorm(p, mean =0, sd =1,lower.tail = TRUE, log.p = FALSE)
+ This gives a normal probability plot, The points in this plot will lie approximately on
+ a straight line if the distribution is normal.
+ rnorm(n, mean =0, sd= 1)orrnorm() Thisgenerate random numberfrom standard
+ normal distribution.
+
+```{r}
+ x <- rnorm(10)
+ pnorm(2)
+ 
+ x <- rnorm(10, 20, 2)
+```
+#Setting the random number seed
+When simulating any random numbers itis essential to set the random number seed.
+ Setting the random number seed with set.seed() ensures reproducibility of the
+ sequence of random numbers.
+```{r}
+set.seed(1)
+ rnorm(5)
+```
+#Simulaton a linear model
+```{r}
+ ## Always set your seed!
+ set.seed(20)
+ ## Simulate predictor variable
+ x <- rnorm(100)
+ ## Simulate the error term
+ e <- rnorm(100, 0, 2)
+ ## Compute the outcome via the model
+ y <- 0.5- 2 * x + e
+ plot(x, y)
+```
+```{r}
+ set.seed(1)
+ sample(1:10, 4)
+```
+```{r}
+ ##Doesn'thavetobenumbers
+ sample(letters,5)
+ ##[1]"r""s""a""u""w"
+ ##Doarandompermutation
+ sample(1:10)
+ ## [1]10 6 9 2 1 5 8 4 3 7
+ sample(1:10)
+ ## [1] 510 2 8 6 1 4 3 9 7
+ ##Samplew/replacement
+ sample(1:10,replace=TRUE)
+```
+#Explorethemodelrpackage.
+## DataVisualization
+```{r}
+# Define vectors
+country <- c("Australia","Austria","Belgium","Canada",
+             "Denmark","Finland","France","Germany",
+             "Greece","Ireland","Italy","Japan","Netherlands",
+             "NewZealand","Norway","Portugal","Spain","Sweden",
+             "Switzerland","UK","USA")
+
+Income.inequality <- c(7.0, 4.8, 4.6, 5.6, 4.3, 3.7, 5.6, 5.2, 6.2, 6.0, 6.7, 
+                        3.4, 5.3, 6.8, 3.9, 8.0, 5.5, 4.0, 5.7, 7.2, 8.6)
+
+Index.HS <- c(0.07, 0.01, -0.23, -0.07, -0.19, -0.43, 0.05, -0.06, 0.38, 0.25, 
+              -0.12, -1.26, -0.51, 0.29, -0.63, 1.18, -0.30, -0.83, -0.46, 0.79, 2.02)
+
+GDP_WB <- c(45926, 47682, 43435, 45066, 45537, 30676, 39328, 46401, 26851, 49393,
+            35463, 36319, 48253, 37679, 65615, 28760, 33629, 45297, 59540, 40233, 54630)
+
+# Create data frame
+data.21 <- data.frame(country, Income.inequality, Index.HS, GDP_WB)
+
+# Scatter plot of Income.inequality vs Index.HS
+plot(data.21$Income.inequality, data.21$Index.HS,
+     xlab = "Income Inequality",
+     ylab = "Index HS",
+     main = "Scatter plot: Income Inequality vs Index HS",
+     pch = 19, col = "blue")
+
+
+```
+```{r}
+Index_inequality.df<-data.21[c("Income.inequality","Index.HS")]
+ str(Index_inequality.df)
+```
+
+```{r}
+(country<-data.21[,"country"])
+```
+```{r}
+ (country.2<-data.21["country"])
+```
+
+```{r}
+ str(country)
+```
+
+```{r}
+str(country.2)
+```
+```{r}
+plot(Index_inequality.df,pch=20)
+ text(Index_inequality.df,labels=country)
+```
+```{r}
+plot(Index_inequality.df,pch=20)
+ text(Index_inequality.df,labels=country,pos=1)
+```
+
+ 
+```{r}
+plot(Index_inequality.df,pch=20)
+ text(Index_inequality.df,labels=country,pos=3)
+```
+```{r}
+plot(Index_inequality.df,pch=20)
+ text(Index_inequality.df,labels=country,pos=4)
+```
+```{r}
+plot(Index_inequality.df,pch=20)
+ text(Index_inequality.df,labels=country,pos=4,cex=0.8)
+```
+```{r}
+which(country %in% c("Austria","Denmark","Germany","Netherland"))
+ ## [1] 2 5 8 13
+ text.left<-which(country %in% c("Austria","Denmark","Germany","Netherla
+ nd"))
+ text.left
+ ## [1] 2 5 8 13
+ text.right<-setdiff(1:nrow(data.21),text.left)
+ text.right
+ ## [1] 1 3 4 6 7 9 10 11 12 14 15 16 17 18 19 20 21
+ pos.text<-ifelse(1:nrow(data.21)%in% text.left,2,4)
+ plot(Index_inequality.df,pch=20,col="red",xlim=c(3,9),ylim=c(-1.5,2.5))
+ text(Index_inequality.df,labels=country,pos=pos.text,cex=0.8)
+
+```
+```{r}
+# Identify Germany index
+text.up <- which(country %in% "Germany")  # Germany is at position 8
+
+# Example: specify other points for text positioning
+text.left <- setdiff(c(2,5,13), text.up)  # manually specify positions if needed
+
+# Set positions: 3=above, 2=left, 4=right
+pos.text <- ifelse(1:nrow(data.21) %in% text.up, 3,
+                   ifelse(1:nrow(data.21) %in% text.left, 2, 4))
+
+# Scatter plot
+plot(data.21$Income.inequality, data.21$Index.HS,
+     pch = 20, col = "red", xlim = c(3, 9), ylim = c(-1.5, 2.5),
+     ann = FALSE)
+
+# Add country names
+text(data.21$Income.inequality, data.21$Index.HS,
+     labels = country, pos = pos.text, cex = 0.8)
+
+# Add titles and axis labels
+main.title <- "Income inequality vs Index of Health and Social problems"
+x.lab <- "Income inequality (5th Ratio)"
+y.lab <- "Index of Health and Social problems"
+
+title(main = main.title, xlab = x.lab, ylab = y.lab)
+
+
+```
+
+```{r}
+plot(Index_inequality.df,pch=20,col="red",xlim=c(3,9),ylim=c(-1.5,2.5),
+ ann=FALSE)
+ text(Index_inequality.df,labels = country,pos=pos.text,cex=0.8)
+ main.title<-"Income inequality vs Index of Health and Social problems"
+ x.lab<-"Income inequality (5th Ratio)"
+ y.lab<-"Index of Health and Social problems"
+ title(main=main.title,xlab=x.lab,ylab=y.lab)
+ mtext(c("Better","Worse"),side=2,at=c(-1.8,2.8),las=1)
+
+```
+```{r}
+# Scatter plot
+plot(data.21$Income.inequality, data.21$Index.HS,
+     pch = 20, col = "red",
+     xlim = c(3, 9), ylim = c(-1.5, 2.5),
+     ann = FALSE)
+
+# Add country labels
+text(data.21$Income.inequality, data.21$Index.HS,
+     labels = country, pos = pos.text, cex = 0.8)
+
+# Titles and axis labels
+main.title <- "Income inequality vs Index of Health and Social problems"
+x.lab <- "Income inequality (5th Ratio)"
+y.lab <- "Index of Health and Social problems"
+title(main = main.title, xlab = x.lab, ylab = y.lab)
+
+# Add margin text on the y-axis
+mtext(c("Better", "Worse"), side = 2, at = c(-1.5, 2.3), las = 1)
+
+# Compute and display correlation
+r_value <- cor(data.21$Income.inequality, data.21$Index.HS)
+text(x = 5, y = 1.5, labels = paste("r =", round(r_value, 2)))
+
+```
+```{r}
+# Scatter plot
+plot(data.21$Income.inequality, data.21$Index.HS,
+     pch = 20, col = "red",
+     xlim = c(3, 9), ylim = c(-1.5, 2.5),
+     ann = FALSE)
+
+# Add country labels
+text(data.21$Income.inequality, data.21$Index.HS,
+     labels = country, pos = pos.text, cex = 0.8)
+
+# Titles and labels
+main.title <- "Income inequality vs Index of Health and Social problems"
+x.lab <- "Income inequality (5th Ratio)"
+y.lab <- "Index of Health and Social problems"
+title(main = main.title, xlab = x.lab, ylab = y.lab)
+
+# Add "Better"/"Worse" text on y-axis
+mtext(c("Better", "Worse"), side = 2, at = c(-1.5, 2.3), las = 1)
+
+# Compute and display correlation coefficient
+r_value <- cor(data.21$Income.inequality, data.21$Index.HS)
+text(x = 5, y = 1.5, labels = paste("r =", round(r_value, 2)))
+
+# Fit linear regression and add line
+lm.ineq <- lm(Index.HS ~ Income.inequality, data = data.21)
+abline(lm.ineq, col = "blue", lwd = 2)
+
+
+```
+```{r}
+rm(list=ls(all=TRUE))
+ ###set.seed(1002)
+ n <-30 ## number of observations
+ M <- 1 ## number of pathways
+ p<-5
+ z <- matrix(runif(n * p, 0, 1), nrow=n, ncol=p)
+ x <- 3*cos(z[, 1]) + 2*rnorm(n)
+ x<-as.matrix(x)
+ beta.true <- rep(1,ncol(x))
+ ## pathway-response function
+ hfun1 <- function(zvec) (10*cos(zvec[1])- 15*(zvec[2])^2+10*exp(-zvec
+ [3])*zvec[4]-8*sin(zvec[5])*cos(zvec[3])+20*(zvec[1]*zvec[5]))
+ h1 <- apply(z, 1, hfun1) ## only depends on z1,z2,z3,z4,z5
+ eps <- rnorm(n)
+ y <-x * beta.true + h1+ eps
+```
+ 
+ 
